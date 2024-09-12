@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import PlayListItem from '@/components/PlayListItem';
+import PlayListItem from '../components/PlayListItem';
 import { expect, it, describe } from 'vitest';
 
 describe('PlayListItem Component', () => {
