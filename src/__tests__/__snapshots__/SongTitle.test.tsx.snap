@@ -1,0 +1,37 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SongTitle Component > renders song title and artist 1`] = `
+<div>
+  <div
+    class="text-left"
+  >
+    <h2
+      class="text-lg font-bold"
+    >
+      Test Song
+    </h2>
+    <p
+      class="text-sm text-gray-500"
+    >
+      Test Artist
+    </p>
+  </div>
+</div>
+`;
+
+exports[`SongTitle Component > renders song title without artist 1`] = `
+<div>
+  <div
+    class="text-left"
+  >
+    <h2
+      class="text-lg font-bold"
+    >
+      Only Title
+    </h2>
+    <p
+      class="text-sm text-gray-500"
+    />
+  </div>
+</div>
+`;
