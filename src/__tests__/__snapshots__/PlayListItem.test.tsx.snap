@@ -1,0 +1,57 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PlayListItem Component > renders correctly when not selected 1`] = `
+<div>
+  <div
+    class="flex justify-between items-center py-2 "
+  >
+    <div
+      class="flex-grow w-32"
+    >
+      <h3
+        class="text-sm font-bold ml-1"
+      >
+        Another Song
+      </h3>
+      <p
+        class="text-xs text-gray-500 ml-1"
+      >
+        Another Artist
+      </p>
+    </div>
+    <span
+      class="text-xs text-gray-500 text-right ml-72 mr-1"
+    >
+      4:00
+    </span>
+  </div>
+</div>
+`;
+
+exports[`PlayListItem Component > renders correctly when selected 1`] = `
+<div>
+  <div
+    class="flex justify-between items-center py-2 bg-gray-300"
+  >
+    <div
+      class="flex-grow w-32"
+    >
+      <h3
+        class="text-sm font-bold ml-1"
+      >
+        Test Song
+      </h3>
+      <p
+        class="text-xs text-gray-500 ml-1"
+      >
+        Test Artist
+      </p>
+    </div>
+    <span
+      class="text-xs text-gray-500 text-right ml-72 mr-1"
+    >
+      3:30
+    </span>
+  </div>
+</div>
+`;
