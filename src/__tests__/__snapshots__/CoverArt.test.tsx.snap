@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CoverArt Component > renders with image URL 1`] = `
+<div>
+  <img
+    alt="Cover Art"
+    class="w-full h-auto rounded-md object-cover"
+    src="https://example.com/cover.jpg"
+  />
+</div>
+`;
+
+exports[`CoverArt Component > renders without image URL (fallback) 1`] = `
+<div>
+  <img
+    alt="Cover Art"
+    class="w-full h-auto rounded-md object-cover"
+    src=""
+  />
+</div>
+`;
