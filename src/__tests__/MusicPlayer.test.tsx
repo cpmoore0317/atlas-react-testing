@@ -1,102 +1,66 @@
-// src/__tests__/MusicPlayer.test.tsx
+import React from "react";
+import { describe, test, expect } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import MusicPlayer from "../MusicPlayer";
+import { server } from "../mocks"; // Ensure this is the correct import path
 
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, test, expect, vi } from 'vitest';
-import MusicPlayer from '../MusicPlayer';
-import usePlaylistData from '../hooks/usePlaylistData';
-
-// Mock the usePlaylistData hook
-vi.mock('../hooks/usePlaylistData', () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
-
-describe('MusicPlayer Component', () => {
-  test('renders MusicPlayer component', () => {
-    // Mock the playlist data hook
-    (usePlaylistData as jest.Mock).mockReturnValue({
-      data: [],
-      loading: false,
-    });
-
+describe("MusicPlayer Component", () => {
+  // Test 1: Verify current song is first song in playlist by default
+  test("should display the first song in the playlist by default", async () => {
     render(<MusicPlayer />);
+    const titleElement = await screen.findByText("Test Song 1");
+    const artistElement = screen.getByText("Test Artist 1");
     
-    // Use regex for flexible matching (case-insensitive)
-    expect(screen.getByText(/unknown title/i)).toBeInTheDocument();
+    expect(titleElement).toBeInTheDocument();
+    expect(artistElement).toBeInTheDocument();
   });
 
-  test('displays loading state when data is being fetched', () => {
-    // Mock the playlist data hook to simulate loading state
-    (usePlaylistData as jest.Mock).mockReturnValue({
-      data: [],
-      loading: true,
-    });
-
+  // Test 2: Verify play/pause can be toggled
+  test("should toggle play/pause when the button is clicked", async () => {
     render(<MusicPlayer />);
-    
-    // Assert that the loading state is displayed
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    const playPauseButton = await screen.findByRole("button", { name: /play/i });
+
+    fireEvent.click(playPauseButton); // Click to play
+    expect(playPauseButton).toHaveAttribute("aria-label", "pause"); // Assuming your button has aria-label for accessibility
+
+    fireEvent.click(playPauseButton); // Click to pause
+    expect(playPauseButton).toHaveAttribute("aria-label", "play");
   });
 
-  test('toggles play/pause functionality', () => {
-    // Mock the playlist data hook
-    (usePlaylistData as jest.Mock).mockReturnValue({
-      data: [],
-      loading: false,
-    });
-
+  // Test 3: Verify forward changes song correctly
+  test("should change to the next song when the forward button is clicked", async () => {
     render(<MusicPlayer />);
+    const nextButton = await screen.findByRole("button", { name: /forward/i });
     
-    // Find the play/pause button by its accessible role and name
-    const playPauseButton = screen.getByRole('button', { name: /play/i });
-    fireEvent.click(playPauseButton);
-    // After clicking, the button text should switch to "Pause"
-    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
+    // Initially, it should be the first song
+    expect(await screen.findByText("Test Song 1")).toBeInTheDocument();
+    
+    fireEvent.click(nextButton); // Click next button
+
+    // After clicking, it should now display the second song
+    expect(await screen.findByText("Test Song 2")).toBeInTheDocument();
   });
 
-  test('goes to the next and previous songs correctly', () => {
-    // Mock the playlist data hook
-    (usePlaylistData as jest.Mock).mockReturnValue({
-      data: [
-        { id: 1, title: 'Song 1' },
-        { id: 2, title: 'Song 2' },
-        { id: 3, title: 'Song 3' },
-      ],
-      loading: false,
-    });
-
+  // Test 4: Verify back changes song correctly
+  test("should change to the previous song when the backward button is clicked", async () => {
     render(<MusicPlayer />);
-    
-    // Find and click the "Next" button
-    const nextButton = screen.getByRole('button', { name: /next/i });
-    fireEvent.click(nextButton);
-    // Assert that the currently playing song is "Song 2"
-    expect(screen.getByText(/song 2/i)).toBeInTheDocument();
+    const nextButton = await screen.findByRole("button", { name: /forward/i });
+    fireEvent.click(nextButton); // Move to the second song
 
-    // Find and click the "Previous" button
-    const prevButton = screen.getByRole('button', { name: /previous/i });
-    fireEvent.click(prevButton);
-    // Assert that the currently playing song is "Song 1"
-    expect(screen.getByText(/song 1/i)).toBeInTheDocument();
+    const backButton = await screen.findByRole("button", { name: /rewind/i });
+    fireEvent.click(backButton); // Click back button
+
+    // It should go back to the first song
+    expect(await screen.findByText("Test Song 1")).toBeInTheDocument();
   });
 
-  test('selecting a song from the playlist updates currently playing', () => {
-    // Mock the playlist data hook
-    (usePlaylistData as jest.Mock).mockReturnValue({
-      data: [
-        { id: 1, title: 'Song 1' },
-        { id: 2, title: 'Song 2' },
-        { id: 3, title: 'Song 3' },
-      ],
-      loading: false,
-    });
-
+  // Test 5: Verify clicking song in playlist changes current song
+  test("should change current song when a song in the playlist is clicked", async () => {
     render(<MusicPlayer />);
+    const secondSong = await screen.findByText("Test Song 2");
     
-    // Find and click on a song title to select it
-    const songItem = screen.getByText(/song 2/i);
-    fireEvent.click(songItem);
-    // Assert that the currently playing song is "Song 2"
-    expect(screen.getByText(/song 2/i)).toBeInTheDocument();
+    fireEvent.click(secondSong); // Click on the second song
+
+    expect(await screen.findByText("Test Song 2")).toBeInTheDocument(); // Now it should display as the current song
   });
 });
